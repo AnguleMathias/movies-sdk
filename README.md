@@ -1,4 +1,4 @@
-# Project Name: Movie SDK
+# Movie SDK
 
 ## Description
 Movie SDK is a software development kit that enables developers to easily integrate movie search and retrieval functionality into their applications. This SDK interacts with an external movie database API to fetch movie details, including random movie suggestions, specific movie searches, and detailed movie descriptions.
