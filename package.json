@@ -1,0 +1,19 @@
+{
+  "name": "ma-movies-sdk",
+  "version": "1.0.0",
+  "description": "SDK that fetches movies from https://search.imdbot.workers.dev/ endpoints",
+  "author": "angulemathias3@@gmail.com",
+  "main": "dist/index.js",
+  "types": "dist/types/types.d.ts",
+  "scripts": {
+    "prepublish": "rm -rf dist && tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "GNU",
+  "dependencies": {
+    "axios": "^1.6.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}
