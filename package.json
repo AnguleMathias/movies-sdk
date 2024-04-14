@@ -1,6 +1,6 @@
 {
   "name": "ma-movies-sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SDK that fetches movies from https://search.imdbot.workers.dev/ endpoints",
   "author": "angulemathias3@@gmail.com",
   "type": "module",
