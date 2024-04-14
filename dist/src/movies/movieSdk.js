@@ -1,5 +1,6 @@
 import axios from "axios";
 import { movieList } from "./movieList";
+import { shuffleAndSelect } from "../utils/utils";
 const BASE_URL = "https://search.imdbot.workers.dev";
 /**
  * Fetches a movie from the API
@@ -27,8 +28,7 @@ export const getMovie = async (query) => {
  * @returns An object containing the results and errors
  */
 export const getRandomMovies = async () => {
-    const shuffled = movieList.sort(() => 0.5 - Math.random());
-    const selectedMovies = shuffled.slice(0, 10);
+    const selectedMovies = shuffleAndSelect(movieList, 10);
     const promises = selectedMovies.map((query) => getMovie(query)
         .then((result) => result instanceof Error ? { error: result } : { result })
         .catch((error) => ({ error: new Error(error.toString()) })));
@@ -40,9 +40,22 @@ export const getRandomMovies = async () => {
             errors.push(item.error);
         }
         else if (item.result) {
-            results.push(item.result);
+            // Ensure result is not an array and only unique items are added
+            if (Array.isArray(item.result)) {
+                item.result.forEach((res) => {
+                    if (!results.some((existingRes) => existingRes["#IMDB_ID"] === res["#IMDB_ID"])) {
+                        results.push(res);
+                    }
+                });
+            }
+            else {
+                if (!results.some((existingRes) => existingRes["#IMDB_ID"] === item.result["#IMDB_ID"])) {
+                    results.push(item.result);
+                }
+            }
         }
     });
+    results = shuffleAndSelect(results, 10);
     return { results, errors };
 };
 /**
