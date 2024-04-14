@@ -2,6 +2,7 @@ import axios from "axios";
 import { MovieTypes, ResponseTypes } from "../types/movieTypes";
 import { movieList } from "./movieList";
 import { shuffleAndSelect } from "../utils/utils";
+import { MovieDetails } from "../types/movieDetails";
 
 const BASE_URL = "https://search.imdbot.workers.dev";
 
@@ -86,10 +87,10 @@ export const getRandomMovies = async (): Promise<{
  */
 export const getMovieDetails = async (
   id: string
-): Promise<ResponseTypes | Error> => {
+): Promise<MovieDetails | Error> => {
   try {
     const response = await axios.get(`${BASE_URL}`, { params: { tt: id } });
-    return response.data as ResponseTypes;
+    return response.data as MovieDetails;
   } catch (error) {
     return error as Error;
   }
