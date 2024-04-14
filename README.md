@@ -13,6 +13,10 @@ To install Movie SDK in your project, follow these steps:
 ```bash
 yarn add git@github.com:angulemathias/movies-sdk.git
 ```
+Or from npm:
+```bash
+yarn add ma-movies-sdk
+```
 Or if you're cloning directly from a repository:
 ```bash
 git clone https://github.com/AnguleMathias/movies-sdk.git
@@ -22,7 +26,7 @@ yarn
 
 ## API Reference
 
-#### 1. `getMovie`
+### `getMovie`
 Fetches detailed information about a specific movie based on the search query.
 
 **Parameters:**
@@ -35,31 +39,21 @@ Fetches detailed information about a specific movie based on the search query.
 
 **Example Usage:**
 ```javascript
-MovieSDK.getMovie("Inception").then(movie => {
-  console.log(movie);
-}).catch(error => {
-  console.error(error);
-});
-```
+import { getMovie } from 'ma-movies-sdk';
 
-**Response Example (MovieTypes):**
-```json
-{
-  "#TITLE": "Inception",
-  "#YEAR": 2010,
-  "#IMDB_ID": "tt1375666",
-  "#RANK": 10,
-  "#ACTORS": "Leonardo DiCaprio, Joseph Gordon-Levitt",
-  "#AKA": "Inception (2010)",
-  "#IMDB_URL": "https://imdb.com/title/tt1375666",
-  "#IMDB_IV": "https://imdb.com/title/tt1375666",
-  "#IMG_POSTER": "https://example.com/poster.jpg",
-  "photo_width": 1000,
-  "photo_height": 1500
+async function searchMovie(query) {
+  const movie = await getMovie(query);
+  if (movie instanceof Error) {
+    console.error("Error:", movie);
+  } else {
+    console.log("Movie Details:", movie);
+  }
 }
+
+searchMovie("Inception");
 ```
 
-#### 2. `getRandomMovies`
+### `getRandomMovies`
 Retrieves a list of 10 random movies from the database. This is useful for features like displaying random movie suggestions on a home screen.
 
 **Parameters:**
@@ -72,46 +66,12 @@ Retrieves a list of 10 random movies from the database. This is useful for featu
 
 **Example Usage:**
 ```javascript
-MovieSDK.getRandomMovies().then(response => {
-  if (response.errors.length > 0) {
-    response.errors.forEach(error => console.error(error));
-  }
-  console.log(response.results);
-});
-```
-
-**Response Example:**
-```json
-{
-  "results": [
-    {
-      "#TITLE": "Random Movie",
-      "#YEAR": 2020,
-      "#IMDB_ID": "tt1234567",
-      "#RANK": 150,
-      "#ACTORS": "Actor Name",
-      "#AKA": "Random Movie (2020)",
-      "#IMDB_URL": "https://imdb.com/title/tt1234567",
-      "#IMG_POSTER": "https://example.com/random-movie.jpg",
-      "photo_width": 800,
-      "photo_height": 1200
-    }
-  ],
-  "errors": []
-}
-```
-
-## Usage
-Here is how you can use Movie SDK to fetch random movies and search for specific movies:
-
-#### Fetch Random Movies
-```javascript
-import { MovieSDK } from 'ma-movies-sdk';
+import { getRandomMovies } from 'ma-movies-sdk';
 
 async function displayRandomMovies() {
-  const { results, errors } = await MovieSDK.getRandomMovies();
+  const { results, errors } = await getRandomMovies();
   if (errors.length) {
-    console.error("Errors:", errors);
+    errors.forEach(error => console.error(error));
   }
   console.log("Random Movies:", results);
 }
@@ -119,20 +79,31 @@ async function displayRandomMovies() {
 displayRandomMovies();
 ```
 
-#### Search for a Movie
-```javascript
-import { MovieSDK } from 'ma-movies-sdk';
+### `getMovieDetails`
+Fetches detailed information about a movie using its ID.
 
-async function searchMovies(query) {
-  const movie = await MovieSDK.getMovie(query);
-  if (movie instanceof Error) {
-    console.error("Search Error:", movie);
+**Parameters:**
+- `id` (string): The unique identifier for the movie.
+
+**Returns:**
+- **Promise<ResponseTypes | Error>**:
+  - **ResponseTypes**: An object containing detailed information about the movie.
+  - **Error**: An error object if the movie details cannot be retrieved.
+
+**Example Usage:**
+```javascript
+import { getMovieDetails } from 'ma-movies-sdk';
+
+async function fetchMovieDetails(id) {
+  const details = await getMovieDetails(id);
+  if (details instanceof Error) {
+    console.error("Error fetching movie details:", details);
   } else {
-    console.log("Movie Details:", movie);
+    console.log("Movie Details:", details);
   }
 }
 
-searchMovies("Inception");
+fetchMovieDetails("tt1375666");
 ```
 
 ## Contributing
