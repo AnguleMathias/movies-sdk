@@ -1,4 +1,4 @@
-export const moviesList = [
+export const movieList = [
   "The Matrix",
   "Inception",
   "Interstellar",
