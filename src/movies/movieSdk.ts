@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { MovieTypes } from "../types/movieTypes";
+import { MovieTypes, ResponseTypes } from "../types/movieTypes";
 import { movieList } from "./movieList";
 
 const BASE_URL = "https://search.imdbot.workers.dev";
@@ -58,5 +58,18 @@ export class MovieSdk {
     });
 
     return { results, errors };
+  }
+
+  /**
+   * @param {string} id
+   * @returns an object containing the movie details or an error
+   */
+  static async getMovieDetails(id: string): Promise<ResponseTypes | Error> {
+    try {
+      const response = await axios.get(`${BASE_URL}`, { params: { tt: id } });
+      return response.data as ResponseTypes;
+    } catch (error) {
+      return error as Error;
+    }
   }
 }
