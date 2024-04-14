@@ -1,6 +1,7 @@
 import axios from "axios";
 import { MovieTypes, ResponseTypes } from "../types/movieTypes";
 import { movieList } from "./movieList";
+import { shuffleAndSelect } from "../utils/utils";
 
 const BASE_URL = "https://search.imdbot.workers.dev";
 
@@ -32,8 +33,7 @@ export const getRandomMovies = async (): Promise<{
   results: MovieTypes[];
   errors: Error[];
 }> => {
-  const shuffled = movieList.sort(() => 0.5 - Math.random());
-  const selectedMovies = shuffled.slice(0, 10);
+  const selectedMovies = shuffleAndSelect(movieList, 10);
 
   const promises = selectedMovies.map((query) =>
     getMovie(query)
@@ -51,9 +51,30 @@ export const getRandomMovies = async (): Promise<{
     if (item.error) {
       errors.push(item.error);
     } else if (item.result) {
-      results.push(item.result as MovieTypes);
+      // Ensure result is not an array and only unique items are added
+      if (Array.isArray(item.result)) {
+        item.result.forEach((res) => {
+          if (
+            !results.some(
+              (existingRes) => existingRes["#IMDB_ID"] === res["#IMDB_ID"]
+            )
+          ) {
+            results.push(res as MovieTypes);
+          }
+        });
+      } else {
+        if (
+          !results.some(
+            (existingRes) => existingRes["#IMDB_ID"] === item.result["#IMDB_ID"]
+          )
+        ) {
+          results.push(item.result as MovieTypes);
+        }
+      }
     }
   });
+
+  results = shuffleAndSelect(results, 10);
 
   return { results, errors };
 };
